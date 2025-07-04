@@ -1,0 +1,38 @@
+/* OK (default: btn-primary → jadi biru topbar) */
+.modal-footer .btn.btn-primary {
+  background-color: #3b82f6 !important; /* Sama seperti tombol Tambah */
+  border-color: #3b82f6 !important;
+  color: white !important;
+  font-weight: 500;
+}
+
+.modal-footer .btn.btn-primary:hover {
+  background-color: #2563eb !important;
+}
+
+/* Cancel (default: btn-secondary → jadi abu lembut) */
+.modal-footer .btn.btn-secondary {
+  background-color: #6b7280 !important; /* Abu seperti sidebar */
+  border-color: #6b7280 !important;
+  color: white !important;
+  font-weight: 500;
+}
+
+.modal-footer .btn.btn-secondary:hover {
+  background-color: #4b5563 !important;
+}
+
+/* Danger (default: btn-danger → jadi merah soft) */
+.modal-footer .btn.btn-danger {
+  background-color: #ef4444 !important; /* Merah soft */
+  border-color: #ef4444 !important;
+  color: white !important;
+  font-weight: 500 !important;
+  box-shadow: none !important;
+}
+
+.modal-footer .btn.btn-danger:hover {
+  background-color: #dc2626 !important;
+  border-color: #dc2626 !important;
+  color: white !important;
+}

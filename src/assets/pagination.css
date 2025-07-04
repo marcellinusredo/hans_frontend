@@ -1,0 +1,24 @@
+/* main.css */
+
+/* Warna teks normal pagination */
+.page-link {
+  color: #4b5563;
+}
+
+/* Hover effect */
+.page-link:hover {
+  background-color: #e0e7ff;
+  color: #1e3a8a;
+}
+
+/* Aktif (halaman sekarang) */
+.page-item.active .page-link {
+  background-color: #1e3a8a;
+  color: #fff;
+  border-color: #1e3a8a;
+}
+
+/* Fokus (misalnya saat pakai keyboard) */
+.page-link:focus {
+  box-shadow: 0 0 0 0.25rem rgba(30, 58, 138, 0.25);
+}
