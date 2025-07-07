@@ -1370,15 +1370,30 @@ const konfirmasiCetakInvoice = (item) => {
 
 async function cetakInvoice(item) {
   const token = sessionStorage.getItem('token')
+
   if (!item?.id_transaksi) {
     toast.warning('ID transaksi tidak valid saat cetakInvoice dipanggil')
     return
   }
 
-  const endpoint = `/transaksi/${item.id_transaksi}/invoice`
-  const params = new URLSearchParams({ token })
+  try {
+    const response = await axios.get(`/transaksi/${item.id_transaksi}/invoice`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
-  window.open(`${axios.defaults.baseURL}${endpoint}?${params.toString()}`, '_blank')
+    const url = response?.data?.url
+    if (url) {
+      window.open(url, '_blank')
+    } else {
+      toast.error('Gagal mendapatkan URL invoice dari server.')
+      console.warn('Respon server tidak berisi "url":', response.data)
+    }
+  } catch (error) {
+    toast.error('Gagal mencetak invoice.')
+    console.error('Error cetak invoice:', error.response?.data || error.message)
+  }
 }
 
 function aturTampilanSwitch() {

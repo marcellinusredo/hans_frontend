@@ -281,22 +281,36 @@ const exportLaporan = async (format) => {
     return
   }
 
-  const endpoint = `/laporan/${jenisLaporan.value}/export/${format}`
-  const params = new URLSearchParams({
-    start: tanggalMulai.value,
-    end: tanggalAkhir.value,
-    token: sessionStorage.getItem('token'), // ⬅️ token dikirim via query param (hindari CORS)
-  })
+  const token = sessionStorage.getItem('token')
+  const start = tanggalMulai.value
+  const end = tanggalAkhir.value
+  const jenis = jenisLaporan.value
+
+  const endpoint = `/laporan/${jenis}/export/${format}`
+  const params = new URLSearchParams({ start, end })
 
   if (format === 'pdf') {
-    // 🔥 Buka tab baru untuk file PDF
-    window.open(`${axios.defaults.baseURL}${endpoint}?${params.toString()}`, '_blank')
+    try {
+      const response = await axios.get(`${endpoint}?${params.toString()}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+
+      if (response.data?.url) {
+        window.open(response.data.url, '_blank')
+      } else {
+        toast.error('Gagal mendapatkan URL file PDF.')
+      }
+    } catch (err) {
+      toastErr(err)
+    }
   } else {
     try {
       const response = await axios.get(`${endpoint}?${params.toString()}`, {
         responseType: 'blob',
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem('token')}`,
+          Authorization: `Bearer ${token}`,
         },
       })
 
@@ -306,7 +320,7 @@ const exportLaporan = async (format) => {
 
       const link = document.createElement('a')
       link.href = URL.createObjectURL(blob)
-      link.download = `laporan_${jenisLaporan.value}.xlsx`
+      link.download = `laporan_${jenis}.xlsx`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)

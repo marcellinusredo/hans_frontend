@@ -1030,10 +1030,22 @@ async function cetakInvoice(item) {
     return
   }
 
-  const endpoint = `/pengadaan-stok/${item.id_pengadaan_stok}/invoice`
-  const params = new URLSearchParams({ token })
+  try {
+    const response = await axios.get(`/pengadaan-stok/${item.id_pengadaan_stok}/invoice`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
 
-  window.open(`${axios.defaults.baseURL}${endpoint}?${params.toString()}`, '_blank')
+    if (response.data?.url) {
+      window.open(response.data.url, '_blank')
+    } else {
+      toast.error('Gagal mendapatkan URL invoice pengadaan.')
+    }
+  } catch (error) {
+    toast.error('Gagal mencetak invoice pengadaan.')
+    console.error('Error cetak invoice pengadaan:', error)
+  }
 }
 </script>
 
