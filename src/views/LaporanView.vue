@@ -28,19 +28,29 @@
             </b-col>
 
             <!-- Tombol Aksi -->
-            <b-col md="3" class="d-flex align-items-end gap-2">
-              <b-button type="submit" title="Cari" variant="primary" class="fw-semibold">
+            <b-col cols="12" md="3" class="d-flex flex-wrap align-items-end gap-2">
+              <!-- Tombol Cari -->
+              <b-button
+                type="submit"
+                title="Cari"
+                variant="primary"
+                class="fw-semibold d-flex align-items-center"
+              >
                 <i class="bi bi-search me-2"></i> Cari
               </b-button>
 
+              <!-- Dropdown Download -->
               <b-dropdown
                 variant="success"
-                text="Download"
                 :disabled="!laporanSiapTampil || loading || jenisLaporan !== jenisLaporanAktif"
-                toggle-class="fw-semibold d-flex align-items-center justify-content-center px-3"
-                class="rounded d-flex align-items-end gap-2"
-                style="height: 38px"
+                class="fw-semibold"
+                toggle-class="fw-semibold d-flex align-items-center justify-content-center px-2 text-nowrap"
+                style="height: 38px; min-width: 120px"
               >
+                <!-- Tombol utama -->
+                <template #button-content> <i class="bi bi-download me-2"></i> Download </template>
+
+                <!-- Isi dropdown -->
                 <b-dropdown-item @click="konfirmasiExport('pdf')">
                   <i class="bi bi-file-earmark-pdf-fill me-2"></i> Export PDF
                 </b-dropdown-item>

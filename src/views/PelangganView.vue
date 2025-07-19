@@ -160,6 +160,8 @@
             <b-form-input
               v-model="pelangganEdit.nama_pelanggan"
               required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nama"
             />
@@ -173,7 +175,9 @@
             <b-form-input
               v-model="pelangganEdit.nomor_telp_pelanggan"
               type="tel"
-              pattern="[0-9]{8,15}"
+              pattern="0[0-9]{9,14}"
+              minlength="10"
+              maxlength="15"
               size="sm"
               placeholder="Masukkan nomor (8–15 digit)"
               @input="hanyaAngka"
@@ -187,6 +191,7 @@
           <b-col sm="9">
             <b-form-input
               v-model="pelangganEdit.alamat_pelanggan"
+              maxlength="50"
               size="sm"
               placeholder="Alamat lengkap"
             />

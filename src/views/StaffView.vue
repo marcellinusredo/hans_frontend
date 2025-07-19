@@ -167,6 +167,8 @@
             <b-form-input
               v-model="staffEdit.nama_staff"
               required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nama"
             />
@@ -180,9 +182,11 @@
             <b-form-input
               v-model="staffEdit.nomor_telp_staff"
               type="tel"
-              pattern="[0-9]{8,15}"
+              pattern="0[0-9]{9,14}"
+              minlength="10"
+              maxlength="15"
               size="sm"
-              placeholder="Masukkan nomor (8–15 digit)"
+              placeholder="Masukkan nomor (10–15 digit dan diawali dengan 0)"
               @input="hanyaAngka"
             />
           </b-col>
@@ -192,7 +196,12 @@
         <b-row class="mb-3 align-items-center">
           <b-col sm="3"><label class="form-label">Alamat </label></b-col>
           <b-col sm="9">
-            <b-form-input v-model="staffEdit.alamat_staff" size="sm" placeholder="Alamat lengkap" />
+            <b-form-input
+              v-model="staffEdit.alamat_staff"
+              size="sm"
+              maxlength="50"
+              placeholder="Alamat lengkap"
+            />
           </b-col>
         </b-row>
 
@@ -206,6 +215,7 @@
               v-model="staffEdit.username_staff"
               required
               minlength="4"
+              maxlength="25"
               size="sm"
               placeholder="Username login"
             />
@@ -233,6 +243,7 @@
               type="password"
               :required="!isEdit || gantiPassword"
               minlength="6"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan password minimal 6 karakter"
             />

@@ -148,6 +148,8 @@
             <b-form-input
               v-model="kategoriEdit.nama_kategori"
               required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nama"
             />
@@ -160,6 +162,7 @@
           <b-col sm="9">
             <b-form-textarea
               v-model="kategoriEdit.deskripsi_kategori"
+              maxlength="255"
               size="sm"
               placeholder="Deskripsi lengkap"
               rows="3"

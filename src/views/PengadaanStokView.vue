@@ -381,6 +381,8 @@
                     v-model.number="row.item.harga_produk_detail_pengadaan_stok"
                     @input="updateSubtotal(row.index)"
                     :min="1"
+                    :max="999999999999999999"
+                    step="1"
                     required
                     style="border: none; background-color: transparent; box-shadow: none"
                   />
@@ -395,6 +397,8 @@
                   @input="updateSubtotal(row.index)"
                   size="sm"
                   :min="1"
+                  :max="2147483647"
+                  step="1"
                   required
                   style="border: none; background-color: transparent; box-shadow: none"
                 />

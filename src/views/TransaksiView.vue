@@ -409,6 +409,8 @@
                   @input="cekJumlah(row.item, row.index)"
                   size="sm"
                   :min="1"
+                  :max="2147483647"
+                  step="1"
                   required
                   style="border: none; background-color: transparent; box-shadow: none"
                 />
@@ -591,7 +593,9 @@
                     v-model.number="transaksiEdit.pembayaran_transaksi"
                     type="number"
                     placeholder="Masukkan pembayaran"
-                    min="0"
+                    :min="1"
+                    :max="999999999999999999"
+                    step="1"
                   />
                 </b-input-group>
               </b-col>

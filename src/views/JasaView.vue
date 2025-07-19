@@ -163,6 +163,8 @@
             <b-form-input
               v-model="jasaEdit.nama_jasa"
               required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nama"
             />
@@ -183,7 +185,9 @@
                 v-model.number="jasaEdit.harga_jasa"
                 required
                 type="number"
-                min="0"
+                min="1000"
+                max="999999999999999999"
+                step="1"
                 placeholder="Masukkan harga"
               />
             </b-input-group>
@@ -196,6 +200,7 @@
           <b-col sm="9">
             <b-form-textarea
               v-model="jasaEdit.deskripsi_jasa"
+              maxlength="255"
               size="sm"
               placeholder="Deskripsi lengkap"
               rows="3"

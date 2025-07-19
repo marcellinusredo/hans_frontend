@@ -225,6 +225,8 @@
           <b-col sm="9">
             <b-form-input
               v-model="produkEdit.nama_produk"
+              minlength="1"
+              maxlength="25"
               required
               size="sm"
               placeholder="Masukkan nama"
@@ -262,6 +264,9 @@
           <b-col sm="9">
             <b-form-input
               v-model="produkEdit.kode_produk"
+              required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nomor kode produk"
             />
@@ -282,7 +287,9 @@
                 v-model.number="produkEdit.harga_produk"
                 required
                 type="number"
-                min="0"
+                min="1000"
+                max="999999999999999999"
+                step="1"
                 placeholder="Masukkan harga"
               />
             </b-input-group>
@@ -295,6 +302,7 @@
           <b-col sm="9">
             <b-form-textarea
               v-model="produkEdit.deskripsi_produk"
+              maxlength="255"
               size="sm"
               placeholder="Deskripsi lengkap"
               rows="3"

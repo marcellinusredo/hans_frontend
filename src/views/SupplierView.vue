@@ -155,6 +155,8 @@
             <b-form-input
               v-model="supplierEdit.nama_supplier"
               required
+              minlength="1"
+              maxlength="25"
               size="sm"
               placeholder="Masukkan nama"
             />
@@ -168,9 +170,11 @@
             <b-form-input
               v-model="supplierEdit.nomor_telp_supplier"
               type="tel"
-              pattern="[0-9]{8,15}"
+              pattern="0[0-9]{9,14}"
+              minlength="10"
+              maxlength="15"
               size="sm"
-              placeholder="Masukkan nomor (8–15 digit)"
+              placeholder="Masukkan nomor (10–15 digit dan diawali dengan 0)"
               @input="hanyaAngka"
             />
           </b-col>
@@ -183,6 +187,8 @@
             <b-form-input
               v-model="supplierEdit.alamat_supplier"
               size="sm"
+              minlength="1"
+              maxlength="50"
               placeholder="Alamat lengkap"
             />
           </b-col>
