@@ -62,13 +62,13 @@ const routes = [
     path: '/jasa',
     name: 'jasa',
     component: JasaView,
-    meta: { requiresAuth: true, allowedRoles: ['Super Admin', 'Admin', 'kasir'] },
+    meta: { requiresAuth: true, allowedRoles: ['Super Admin', 'Admin', 'Kasir'] },
   },
   {
     path: '/produk',
     name: 'produk',
     component: ProdukView,
-    meta: { requiresAuth: true, allowedRoles: ['Super Admin', 'Admin', 'kasir'] },
+    meta: { requiresAuth: true, allowedRoles: ['Super Admin', 'Admin', 'Kasir'] },
   },
   {
     path: '/pengadaanstok',
