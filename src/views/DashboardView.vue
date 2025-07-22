@@ -1,11 +1,12 @@
 <template>
   <div class="container mt-4">
     <h2 class="fw-bold mb-4">Dashboard</h2>
-    <div class="bg-white p-5 shadow rounded mt-4">
-      <!-- Judul Ringkasan Bulan -->
-      <h4 class="fw-bold text-center mb-4">Ringkasan {{ bulanTahunSekarang }}</h4>
 
-      <!-- Top Cards -->
+    <!-- RINGKASAN BULANAN -->
+    <div class="bg-white p-5 shadow rounded mt-4">
+      <h4 class="fw-bold text-center mb-4">Ringkasan Bulan {{ bulanTahunSekarang }}</h4>
+
+      <!-- Total & Jumlah Transaksi,Total & Jumlah Pengadaan Stok -->
       <b-row class="g-3 mb-4">
         <b-col v-for="card in topCards" :key="card.key" :md="colSizeTop">
           <b-card :class="`border-${card.variant} bg-${card.variant} bg-opacity-10 shadow-sm`">
@@ -20,9 +21,9 @@
         </b-col>
       </b-row>
 
-      <!-- Transaksi & Pengadaan Terbaru -->
-      <b-row class="mb-4">
-        <b-col v-for="card in middleCards" :key="card.key" :md="middleCards.length === 2 ? 6 : 12">
+      <!-- Produk & Jasa Terlaris -->
+      <b-row>
+        <b-col v-for="card in larisCards" :key="card.key" :md="6">
           <b-card class="border-primary shadow-sm">
             <template #header>
               <span class="fw-semibold text-primary">{{ card.title }}</span>
@@ -33,13 +34,21 @@
           </b-card>
         </b-col>
       </b-row>
+    </div>
 
-      <!-- Produk & Jasa Terlaris -->
+    <!-- Divider -->
+    <hr class="my-5" />
+
+    <!-- RINGKASAN REAL-TIME -->
+    <div class="bg-white p-5 shadow rounded mt-4">
+      <h4 class="fw-bold text-center mb-4">Aktivitas Terbaru & Info Stok</h4>
+
+      <!-- Transaksi & Pengadaan Terbaru -->
       <b-row class="mb-4">
-        <b-col v-for="card in larisCards" :key="card.key" :md="larisCards.length === 2 ? 6 : 12">
-          <b-card class="border-primary shadow-sm">
+        <b-col v-for="card in middleCards" :key="card.key" :md="middleCards.length === 2 ? 6 : 12">
+          <b-card class="border-info shadow-sm">
             <template #header>
-              <span class="fw-semibold text-primary">{{ card.title }}</span>
+              <span class="fw-semibold text-info">{{ card.title }} </span>
             </template>
             <ul class="list-unstyled mb-0">
               <li v-for="item in card.items" :key="item.key" class="mb-2" v-html="item.html" />
@@ -49,11 +58,11 @@
       </b-row>
 
       <!-- Produk Hampir Habis -->
-      <b-row class="mb-4" v-if="['Super Admin', 'Admin'].includes(nama_role)">
+      <b-row v-if="['Super Admin', 'Admin', 'Pemilik'].includes(nama_role)">
         <b-col md="12">
           <b-card class="border-danger bg-danger bg-opacity-10 shadow-sm">
             <template #header>
-              <span class="fw-semibold text-danger">Produk Hampir Habis</span>
+              <span class="fw-semibold text-danger">Produk Hampir Habis </span>
             </template>
             <p class="mb-2">
               <strong>Total:</strong> {{ dataDashboard.jumlah_produk_hampir_habis }} produk
