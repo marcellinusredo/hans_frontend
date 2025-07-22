@@ -1029,26 +1029,22 @@ const konfirmasiCetakInvoice = (item) => {
 
 async function cetakInvoice(item) {
   const token = sessionStorage.getItem('token')
-  if (!item?.id_pengadaan_stok) {
-    console.warn('ID pengadaan stok tidak valid saat cetakInvoice dipanggil')
-    return
-  }
+  if (!item?.id_pengadaan_stok) return
 
   try {
     const response = await axios.get(`/pengadaan-stok/${item.id_pengadaan_stok}/invoice`, {
+      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
-    if (response.data?.url) {
-      window.open(response.data.url, '_blank')
-    } else {
-      toast.error('Gagal mendapatkan URL invoice pengadaan.')
-    }
-  } catch (error) {
-    toast.error('Gagal mencetak invoice pengadaan.')
-    console.error('Error cetak invoice pengadaan:', error)
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const blobUrl = URL.createObjectURL(blob)
+    window.open(blobUrl, '_blank')
+  } catch (err) {
+    toast.error('Gagal membuka invoice PDF.')
+    console.error(err)
   }
 }
 </script>

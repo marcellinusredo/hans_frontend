@@ -1382,21 +1382,18 @@ async function cetakInvoice(item) {
 
   try {
     const response = await axios.get(`/transaksi/${item.id_transaksi}/invoice`, {
+      responseType: 'blob',
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
 
-    const url = response?.data?.url
-    if (url) {
-      window.open(url, '_blank')
-    } else {
-      toast.error('Gagal mendapatkan URL invoice dari server.')
-      console.warn('Respon server tidak berisi "url":', response.data)
-    }
+    const blob = new Blob([response.data], { type: 'application/pdf' })
+    const blobUrl = URL.createObjectURL(blob)
+    window.open(blobUrl, '_blank') // tampilkan di tab baru
   } catch (error) {
-    toast.error('Gagal mencetak invoice.')
-    console.error('Error cetak invoice:', error.response?.data || error.message)
+    toast.error('Gagal mencetak invoice transaksi.')
+    console.error('Error cetak invoice transaksi:', error.response?.data || error.message)
   }
 }
 

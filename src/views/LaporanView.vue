@@ -296,34 +296,41 @@ const konfirmasiExport = (format) => {
 }
 
 const exportLaporan = async (format) => {
-  if (!jenisLaporanAktif.value || !tanggalMulaiAktif.value || !tanggalAkhirAktif.value) {
+  const butuhTanggal = laporanButuhTanggal.value
+
+  if (
+    !jenisLaporanAktif.value ||
+    (butuhTanggal && (!tanggalMulaiAktif.value || !tanggalAkhirAktif.value))
+  ) {
     toast.info('Silakan cari laporan terlebih dahulu sebelum mengunduh.')
     return
   }
 
   const token = sessionStorage.getItem('token')
-  const start = tanggalMulai.value
-  const end = tanggalAkhir.value
   const jenis = jenisLaporan.value
-
   const endpoint = `/laporan/${jenis}/export/${format}`
-  const params = new URLSearchParams({ start, end })
+
+  const params = new URLSearchParams()
+  if (butuhTanggal) {
+    params.append('start', tanggalMulai.value)
+    params.append('end', tanggalAkhir.value)
+  }
 
   if (format === 'pdf') {
     try {
       const response = await axios.get(`${endpoint}?${params.toString()}`, {
+        responseType: 'blob',
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
 
-      if (response.data?.url) {
-        window.open(response.data.url, '_blank')
-      } else {
-        toast.error('Gagal mendapatkan URL file PDF.')
-      }
+      const blob = new Blob([response.data], { type: 'application/pdf' })
+      const blobUrl = URL.createObjectURL(blob)
+      window.open(blobUrl, '_blank')
     } catch (err) {
-      toastErr(err)
+      toast.error('Gagal membuka file PDF laporan.')
+      console.error('Error download PDF:', err)
     }
   } else {
     try {
