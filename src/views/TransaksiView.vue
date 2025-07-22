@@ -786,13 +786,13 @@ function resetForm() {
 // Field Tabel
 const fields = [
   { key: 'index', label: 'No', thClass: 'text-center', tdClass: 'text-center' },
-  { key: 'nama_pelanggan', label: 'Nama', thClass: 'text-center', tdClass: 'text-start' },
   {
     key: 'nomor_invoice_transaksi',
     label: 'Invoice',
     thClass: 'text-center',
     tdClass: 'text-start',
   },
+  { key: 'nama_pelanggan', label: 'Nama', thClass: 'text-center', tdClass: 'text-start' },
   { key: 'waktu_transaksi', label: 'Tanggal', thClass: 'text-center', tdClass: 'text-start' },
   {
     key: 'total_harga_transaksi',

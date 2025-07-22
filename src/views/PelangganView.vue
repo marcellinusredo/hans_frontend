@@ -179,7 +179,7 @@
               minlength="10"
               maxlength="15"
               size="sm"
-              placeholder="Masukkan nomor (8–15 digit)"
+              placeholder="Masukkan nomor (10–15 digit dan diawali dengan 0)"
               @input="hanyaAngka"
             />
           </b-col>
