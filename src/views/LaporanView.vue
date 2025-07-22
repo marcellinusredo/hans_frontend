@@ -16,14 +16,24 @@
             <!-- Tanggal Mulai -->
             <b-col md="3">
               <b-form-group label="Tanggal Mulai">
-                <b-form-input type="date" v-model="tanggalMulai" required />
+                <b-form-input
+                  type="date"
+                  v-model="tanggalMulai"
+                  :required="laporanButuhTanggal"
+                  :disabled="!laporanButuhTanggal"
+                />
               </b-form-group>
             </b-col>
 
             <!-- Tanggal Akhir -->
             <b-col md="3">
               <b-form-group label="Tanggal Akhir">
-                <b-form-input type="date" v-model="tanggalAkhir" required />
+                <b-form-input
+                  type="date"
+                  v-model="tanggalAkhir"
+                  :required="laporanButuhTanggal"
+                  :disabled="!laporanButuhTanggal"
+                />
               </b-form-group>
             </b-col>
 
@@ -349,4 +359,16 @@ watch([halamanSaatIni, perPage], async () => {
 watch([jenisLaporan, tanggalMulai, tanggalAkhir], () => {
   laporanSiapTampil.value = false
 })
+
+watch(jenisLaporan, (val) => {
+  if (val === 'stok-produk') {
+    toast.info('Laporan ini tidak memerlukan filter tanggal.')
+  }
+})
+
+const laporanButuhTanggal = computed(() =>
+  ['transaksi', 'produk-terlaris', 'jasa-terlaris', 'pengadaan-produk', 'keuangan'].includes(
+    jenisLaporan.value,
+  ),
+)
 </script>
