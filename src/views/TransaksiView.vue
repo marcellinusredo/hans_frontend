@@ -541,7 +541,7 @@
               <b-col cols="6">
                 <!-- tombool tambah jasa-->
                 <b-button
-                  title="Tambah Produk"
+                  title="Tambah Jasa"
                   size="sm"
                   style="
                     background-color: #bfdbfe;
@@ -553,7 +553,7 @@
                   class="mt-2"
                   @click="tambahDetailJasa"
                 >
-                  <i class="bi bi-plus-lg"></i> Tambah Produk
+                  <i class="bi bi-plus-lg"></i> Tambah Jasa
                 </b-button>
               </b-col>
 
@@ -1212,6 +1212,18 @@ async function onEdit(item) {
       detail_produk: (data.detail_transaksi || []).map((dp) => ({ ...dp })),
       detail_jasa: (data.detail_transaksi_jasa || []).map((dj) => ({ ...dj })),
     })
+    //Tambahkan produk yang dipakai ke produkOptions jika belum ada
+    data.detail_transaksi.forEach((item) => {
+      const sudahAda = produkOptions.value.some((p) => p.value === item.produk_id)
+      if (!sudahAda) {
+        produkOptions.value.push({
+          value: item.produk_id,
+          text: `${item.nama_produk || 'Produk Tidak Ditemukan'} (Stok: 0)`,
+          harga: item.harga_produk_detail_transaksi,
+          stok: 0,
+        })
+      }
+    })
 
     Object.assign(transaksiEditBefore, JSON.parse(JSON.stringify(transaksiEdit))) // deep copy
     isEdit.value = true
@@ -1338,12 +1350,22 @@ function onProdukChange(item, index) {
 
 function cekJumlah(item, index) {
   const produk = produkOptions.value.find((p) => p.value === item.produk_id)
-  const stok = produk?.stok ?? 0
+  const stokTersedia = produk?.stok ?? 0
 
-  if (item.jumlah_produk_detail_transaksi > stok) {
-    item.jumlah_produk_detail_transaksi = stok
-    toast.warning(`Jumlah melebihi stok (${stok})`)
+  // Saat edit, tambahkan jumlah yang sudah ada sebelumnya agar validasinya benar
+  let jumlahDiTransaksi = 0
+  if (isEdit.value && transaksiEditBefore.detail_produk?.length) {
+    const dataLama = transaksiEditBefore.detail_produk.find((p) => p.produk_id === item.produk_id)
+    jumlahDiTransaksi = dataLama?.jumlah_produk_detail_transaksi || 0
   }
+
+  const totalBoleh = stokTersedia + jumlahDiTransaksi
+
+  if (item.jumlah_produk_detail_transaksi > totalBoleh) {
+    item.jumlah_produk_detail_transaksi = totalBoleh
+    toast.warning(`Jumlah melebihi stok tersedia (${totalBoleh})`)
+  }
+
   updateSubtotalProduk(index)
 }
 

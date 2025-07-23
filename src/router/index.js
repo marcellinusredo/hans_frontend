@@ -94,6 +94,10 @@ const routes = [
     component: LaporanView,
     meta: { requiresAuth: true },
   },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: '/login',
+  },
 ]
 
 const router = createRouter({
