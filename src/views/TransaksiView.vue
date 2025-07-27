@@ -180,7 +180,7 @@
     <!-- Modal Detail Transaksi -->
     <b-modal
       v-model="showDetail"
-      title="Detail Pengadaan Stok"
+      title="Detail Transaksi"
       size="lg"
       no-footer
       centered
@@ -1154,10 +1154,9 @@ function openFormTambah() {
 
 function isDataChanged(before, after) {
   const keysUtama = [
-    'supplier_id',
-    'staff_id',
-    'waktu_pengadaan_stok',
-    'total_harga_pengadaan_stok',
+    'nama_pelanggan',
+    'waktu_transaksi',
+    'total_harga_transaksi',
     'pembayaran_transaksi',
     'kembalian_transaksi',
   ]
@@ -1173,9 +1172,9 @@ function isDataChanged(before, after) {
     const ap = after.detail_produk[i]
     const keysDetailProduk = [
       'produk_id',
-      'harga_produk_detail_pengadaan_stok',
-      'jumlah_produk_detail_pengadaan_stok',
-      'subtotal_produk_detail_pengadaan_stok',
+      'harga_produk_detail_transaksi',
+      'jumlah_produk_detail_transaksi',
+      'subtotal_produk_transaksi',
     ]
     const detailProdukBerubah = keysDetailProduk.some((key) => bp[key] !== ap[key])
     if (detailProdukBerubah) return true

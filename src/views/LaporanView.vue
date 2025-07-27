@@ -5,17 +5,17 @@
       <!-- Form filter laporan -->
       <b-card class="mb-3 w-100">
         <b-form @submit.prevent="ambilLaporan">
-          <b-row>
+          <b-row class="gy-3 gx-3">
             <!-- Jenis Laporan -->
-            <b-col md="3">
-              <b-form-group label="Jenis Laporan">
+            <b-col cols="12" md="3">
+              <b-form-group label="Jenis Laporan" class="mb-0">
                 <b-form-select v-model="jenisLaporan" :options="opsiSelect" required />
               </b-form-group>
             </b-col>
 
             <!-- Tanggal Mulai -->
-            <b-col md="3">
-              <b-form-group label="Tanggal Mulai">
+            <b-col cols="12" md="3">
+              <b-form-group label="Tanggal Mulai" class="mb-0">
                 <b-form-input
                   type="date"
                   v-model="tanggalMulai"
@@ -26,8 +26,8 @@
             </b-col>
 
             <!-- Tanggal Akhir -->
-            <b-col md="3">
-              <b-form-group label="Tanggal Akhir">
+            <b-col cols="12" md="3">
+              <b-form-group label="Tanggal Akhir" class="mb-0">
                 <b-form-input
                   type="date"
                   v-model="tanggalAkhir"
@@ -38,44 +38,71 @@
             </b-col>
 
             <!-- Tombol Aksi -->
-            <b-col cols="12" md="3" class="d-flex flex-wrap align-items-end gap-2">
-              <!-- Tombol Cari -->
+            <b-col cols="12" md="3" class="d-flex align-items-end">
               <b-button
                 type="submit"
                 title="Cari"
                 variant="primary"
-                class="fw-semibold d-flex align-items-center"
+                class="fw-semibold w-100 d-flex align-items-center justify-content-center"
               >
                 <i class="bi bi-search me-2"></i> Cari
               </b-button>
-
-              <!-- Dropdown Download -->
-              <b-dropdown
-                variant="success"
-                :disabled="!laporanSiapTampil || loading || jenisLaporan !== jenisLaporanAktif"
-                class="fw-semibold"
-                toggle-class="fw-semibold d-flex align-items-center justify-content-center px-2 text-nowrap"
-                style="height: 38px; min-width: 120px"
-              >
-                <!-- Tombol utama -->
-                <template #button-content> <i class="bi bi-download me-2"></i> Download </template>
-
-                <!-- Isi dropdown -->
-                <b-dropdown-item @click="konfirmasiExport('pdf')">
-                  <i class="bi bi-file-earmark-pdf-fill me-2"></i> Export PDF
-                </b-dropdown-item>
-                <b-dropdown-item @click="konfirmasiExport('excel')">
-                  <i class="bi bi-file-earmark-excel-fill me-2"></i> Export Excel
-                </b-dropdown-item>
-              </b-dropdown>
             </b-col>
           </b-row>
         </b-form>
       </b-card>
+    </div>
+    <b-modal
+      id="modal-konfirmasi-download"
+      ref="modalKonfirmasi"
+      title="Konfirmasi Unduhan"
+      ok-title="Download"
+      cancel-title="Batal"
+      centered
+      title-class="fw-bold text-center w-100"
+      footer-class="d-flex justify-content-between "
+      @ok="() => exportLaporan(formatUnduhan)"
+    >
+      <p>
+        Apakah Anda yakin ingin mengunduh laporan <strong>{{ jenisLaporanAktif }}</strong> dalam
+        format <strong>{{ formatUnduhan }}</strong
+        >?
+      </p>
+    </b-modal>
 
-      <!-- Ringkasan Laporan -->
-      <div v-if="laporanSiapTampil && !loading">
-        <template v-if="tipeLaporan === 'ringkasan' && laporan">
+    <!-- Modal untuk laporan -->
+    <b-modal
+      v-model="showModal"
+      size="xl"
+      title="Laporan"
+      title-class="text-center w-100 fw-bold"
+      centered
+      scrollable
+      no-footer
+      @hide="resetLaporan"
+    >
+      <div class="d-flex justify-content-end mb-3">
+        <b-dropdown
+          variant="success"
+          :disabled="!laporanSiapTampil || loading || !laporan.data || laporan.data.length === 0"
+          toggle-class="fw-semibold d-flex align-items-center justify-content-center px-3"
+        >
+          <template #button-content> <i class="bi bi-download me-2"></i> Download </template>
+          <b-dropdown-item @click="konfirmasiExport('pdf')">
+            <i class="bi bi-file-earmark-pdf-fill me-2"></i> Export PDF
+          </b-dropdown-item>
+          <b-dropdown-item @click="konfirmasiExport('excel')">
+            <i class="bi bi-file-earmark-excel-fill me-2"></i> Export Excel
+          </b-dropdown-item>
+        </b-dropdown>
+      </div>
+
+      <div v-if="loading" class="text-center my-5">
+        <b-spinner label="Memuat..."></b-spinner>
+      </div>
+
+      <template v-else>
+        <div v-if="tipeLaporan === 'ringkasan' && laporan">
           <b-card title="Ringkasan Laporan">
             <ul>
               <li>
@@ -87,11 +114,9 @@
               <li><strong>Laba Kotor:</strong> <FormatRupiah :value="laporan.laba_kotor" /></li>
             </ul>
           </b-card>
-        </template>
+        </div>
 
-        <!-- Tabel Laporan -->
-        <template v-if="tipeLaporan === 'tabel'">
-          <!-- Kontrol per halaman -->
+        <div v-else-if="tipeLaporan === 'tabel' && laporan.data && laporan.data.length > 0">
           <div class="d-flex justify-content-between mb-2">
             <div class="d-flex align-items-center gap-2">
               <i
@@ -102,8 +127,6 @@
               <b-form-select v-model="perPage" :options="perPageOptions" class="w-auto" size="sm" />
             </div>
           </div>
-
-          <!-- Tabel utama -->
           <b-table
             :items="laporan.data"
             :fields="laporanFields"
@@ -122,49 +145,41 @@
             <template #cell(total_harga_transaksi)="data">
               <FormatRupiah :value="data.item.total_harga_transaksi" />
             </template>
-            <template #cell(total_terjual)="data"> {{ data.item.total_terjual }} pcs </template>
-            <template #cell(jumlah_digunakan)="data">
-              {{ data.item.jumlah_digunakan }} kali
-            </template>
-            <template #cell(total_harga_pengadaan_stok)="data">
-              <FormatRupiah :value="data.item.total_harga_pengadaan_stok" />
-            </template>
           </b-table>
 
-          <!-- Pagination -->
-          <div class="position-relative mt-2" v-if="perPage !== 'all'">
-            <div class="position-absolute end-0 top-0">
-              <strong>Total Data:</strong> {{ totalRows }}
-            </div>
-            <div class="text-center">
-              <b-pagination
-                v-model="halamanSaatIni"
-                :total-rows="totalRows"
-                :per-page="perPage"
-                align="center"
-                class="mt-2"
-              />
-            </div>
+          <div class="d-flex justify-content-between mt-3" v-if="perPage !== 'all'">
+            <div><strong>Total Data:</strong> {{ totalRows }}</div>
+            <b-pagination
+              v-model="halamanSaatIni"
+              :total-rows="totalRows"
+              :per-page="perPage"
+              align="right"
+            />
           </div>
-        </template>
-      </div>
-    </div>
-    <b-modal
-      id="modal-konfirmasi-download"
-      ref="modalKonfirmasi"
-      title="Konfirmasi Unduhan"
-      ok-title="Download"
-      cancel-title="Batal"
-      centered
-      title-class="fw-bold text-center w-100"
-      footer-class="d-flex justify-content-between "
-      @ok="() => exportLaporan(formatUnduhan)"
-    >
-      <p>
-        Apakah Anda yakin ingin mengunduh laporan <strong>{{ jenisLaporanAktif }}</strong> dalam
-        format <strong>{{ formatUnduhan }}</strong
-        >?
-      </p>
+        </div>
+
+        <div v-else class="text-center py-4 text-muted">
+          <i class="bi bi-exclamation-circle-fill me-2"></i> Data tidak ditemukan.
+        </div>
+      </template>
+
+      <template #modal-footer>
+        <b-button
+          variant="success"
+          :disabled="!laporanSiapTampil || loading"
+          @click="konfirmasiExport('pdf')"
+        >
+          <i class="bi bi-file-earmark-pdf-fill me-2"></i> Download PDF
+        </b-button>
+        <b-button
+          variant="success"
+          :disabled="!laporanSiapTampil || loading"
+          @click="konfirmasiExport('excel')"
+        >
+          <i class="bi bi-file-earmark-excel-fill me-2"></i> Download Excel
+        </b-button>
+        <b-button variant="secondary" @click="showModal = false">Tutup</b-button>
+      </template>
     </b-modal>
   </div>
 </template>
@@ -201,6 +216,14 @@ const perPageOptions = [
   { value: 'all', text: 'All' },
 ]
 const laporanFields = ref([])
+const showModal = ref(false)
+
+const resetLaporan = () => {
+  laporan.value = []
+  laporanSiapTampil.value = false
+  tipeLaporan.value = null
+  halamanSaatIni.value = 1
+}
 
 onMounted(async () => {
   try {
@@ -228,11 +251,9 @@ const opsiSelect = computed(() => {
 })
 
 const ambilLaporan = async () => {
-  laporan.value = []
-  laporanSiapTampil.value = false
-  tipeLaporan.value = null
-  halamanSaatIni.value = 1
+  resetLaporan()
   await loadData()
+  showModal.value = true
 }
 
 const loadData = async () => {
