@@ -129,6 +129,7 @@
 
             <!-- Tombol Edit -->
             <b-button
+              v-if="false"
               title="Edit Data Transaksi"
               size="sm"
               variant="light"

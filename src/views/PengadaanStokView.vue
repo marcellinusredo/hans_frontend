@@ -127,6 +127,7 @@
 
             <!-- Tombol Edit -->
             <b-button
+              v-if="false"
               title="Edit Data Pengadaan Stok"
               size="sm"
               variant="light"
